@@ -1,12 +1,16 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import AdminMenu from "../../components/AdminMenu";
 
 function AdminDashboard() {
   return (
-    <div style={{ padding: "20px" }}>
+    <div>
+
+      <AdminMenu />
+
       <h1>Admin Dashboard</h1>
 
       <ul>
+
         <li>
           <Link to="/admin/add-product">Add Product</Link>
         </li>
@@ -15,8 +19,12 @@ function AdminDashboard() {
           <Link to="/admin/products">Manage Products</Link>
         </li>
 
-        <li>View Orders</li>
+        <li>
+          <Link to="/orders">View Orders</Link>
+        </li>
+
       </ul>
+
     </div>
   );
 }
