@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { CartContext } from "../context/CartContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -11,8 +11,16 @@ function Cart() {
     removeFromCart,
     increaseQuantity,
     decreaseQuantity,
-    totalPrice
+    totalPrice,
+    loadCart
   } = useContext(CartContext);
+
+  // Load cart from backend when page opens
+  useEffect(() => {
+    if (loadCart) {
+      loadCart();
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -35,11 +43,9 @@ function Cart() {
             </p>
 
             <Link to="/products">
-
               <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">
                 Continue Shopping
               </button>
-
             </Link>
 
           </div>
@@ -50,10 +56,10 @@ function Cart() {
             {/* CART ITEMS */}
             <div className="space-y-6">
 
-              {cartItems.map((item, index) => (
+              {cartItems.map((item) => (
 
                 <div
-                  key={item.id || index}
+                  key={item._id || item.id}
                   className="flex flex-col md:flex-row items-center justify-between border-b pb-5 gap-4"
                 >
 
@@ -85,10 +91,10 @@ function Cart() {
                   <div className="flex items-center gap-3">
 
                     <button
-                      onClick={() => decreaseQuantity(item.id)}
+                      onClick={() => decreaseQuantity(item._id || item.id)}
                       className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300"
                     >
-                      -
+                      −
                     </button>
 
                     <span className="font-semibold">
@@ -96,7 +102,7 @@ function Cart() {
                     </span>
 
                     <button
-                      onClick={() => increaseQuantity(item.id)}
+                      onClick={() => increaseQuantity(item._id || item.id)}
                       className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300"
                     >
                       +
@@ -115,7 +121,7 @@ function Cart() {
 
                   {/* REMOVE BUTTON */}
                   <button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => removeFromCart(item._id || item.id)}
                     className="text-red-500 font-semibold hover:text-red-700"
                   >
                     Remove
@@ -136,11 +142,9 @@ function Cart() {
               </h2>
 
               <Link to="/checkout">
-
                 <button className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition">
                   Proceed to Checkout
                 </button>
-
               </Link>
 
             </div>

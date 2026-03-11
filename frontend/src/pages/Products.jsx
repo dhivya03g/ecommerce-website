@@ -1,8 +1,7 @@
 import { useLocation, Link } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import products from "../data/products";
 import { CartContext } from "../context/CartContext";
 
 function Products() {
@@ -13,13 +12,31 @@ function Products() {
   const query = new URLSearchParams(location.search);
   const search = query.get("search") || "";
 
+  const [products, setProducts] = useState([]);
   const [category, setCategory] = useState("all");
+  const [loading, setLoading] = useState(true);
+
+  // Fetch products from backend API
+  useEffect(() => {
+
+    fetch("http://localhost:5000/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+        setLoading(false);
+      });
+
+  }, []);
 
   // Filter products
   const filteredProducts = products.filter((product) => {
 
     const matchSearch = product.name
-      .toLowerCase()
+      ?.toLowerCase()
       .includes(search.toLowerCase());
 
     const matchCategory =
@@ -36,7 +53,6 @@ function Products() {
 
       <div className="max-w-7xl mx-auto py-12 px-6">
 
-        {/* Page Title */}
         <h1 className="text-3xl font-bold mb-10 text-center">
           Our Products
         </h1>
@@ -81,52 +97,58 @@ function Products() {
 
         </div>
 
-        {/* PRODUCTS GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Loading */}
+        {loading ? (
+          <p className="text-center text-lg">Loading products...</p>
+        ) : (
 
-          {filteredProducts.map((product) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-            <div
-              key={product.id}
-              className="bg-white shadow-lg rounded-xl p-4 text-center hover:scale-105 transition"
-            >
+            {filteredProducts.map((product) => (
 
-              <Link to={`/product/${product.id}`}>
+              <div
+                key={product._id || product.id}
+                className="bg-white shadow-lg rounded-xl p-4 text-center hover:scale-105 transition"
+              >
 
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="h-48 mx-auto object-contain"
-                />
+                <Link to={`/product/${product._id || product.id}`}>
 
-              </Link>
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="h-48 mx-auto object-contain"
+                  />
 
-              <h3 className="font-semibold text-lg mt-4">
-                {product.name}
-              </h3>
+                </Link>
 
-              <p className="text-green-600 font-bold text-lg">
-                ₹{product.price}
-              </p>
+                <h3 className="font-semibold text-lg mt-4">
+                  {product.name}
+                </h3>
 
-              {/* Rating */}
-              <div className="text-yellow-400 mt-2">
-                ⭐⭐⭐⭐☆
+                <p className="text-green-600 font-bold text-lg">
+                  ₹{product.price}
+                </p>
+
+                {/* Rating */}
+                <div className="text-yellow-400 mt-2">
+                  ⭐⭐⭐⭐☆
+                </div>
+
+                {/* Add to Cart */}
+                <button
+                  onClick={() => addToCart(product)}
+                  className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800"
+                >
+                  Add to Cart
+                </button>
+
               </div>
 
-              {/* Add to Cart */}
-              <button
-                onClick={() => addToCart(product)}
-                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800"
-              >
-                Add to Cart
-              </button>
+            ))}
 
-            </div>
+          </div>
 
-          ))}
-
-        </div>
+        )}
 
       </div>
 
