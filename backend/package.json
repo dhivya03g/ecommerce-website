@@ -15,7 +15,10 @@
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+<<<<<<< HEAD
 
+=======
+>>>>>>> a4cff5771843f68d3da3c434a9f59cfd8565da3b
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.4",
     "nodemon": "^3.1.14"

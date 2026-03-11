@@ -5,27 +5,45 @@ function ManageProducts() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const storedProducts =
-      JSON.parse(localStorage.getItem("products")) || [];
 
-    setProducts(storedProducts);
+    fetch("http://localhost:5000/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+      });
+
   }, []);
 
   return (
     <div style={{ padding: "20px" }}>
       <h2>Manage Products</h2>
 
-      {products.length === 0 && <p>No products added</p>}
+      {products.length === 0 ? (
+        <p>No products available</p>
+      ) : (
+        products.map((product) => (
+          <div
+            key={product._id}
+            style={{
+              border: "1px solid gray",
+              padding: "10px",
+              marginBottom: "10px"
+            }}
+          >
+            <h3>{product.name}</h3>
 
-      {products.map((product, index) => (
-        <div key={index} style={{ marginBottom: "10px" }}>
-          <strong>{product.name}</strong> - ₹{product.price}
-          <br />
-          Category: {product.category}
-          <br />
-          Stock: {product.stock}
-        </div>
-      ))}
+            <p>Price: ₹{product.price}</p>
+
+            <p>Category: {product.category}</p>
+
+            <p>Description: {product.description}</p>
+          </div>
+        ))
+      )}
+
     </div>
   );
 }
