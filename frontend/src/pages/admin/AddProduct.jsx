@@ -17,66 +17,48 @@ function AddProduct() {
     });
   };
 
- const handleSubmit = (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const existingProducts =
-    JSON.parse(localStorage.getItem("products")) || [];
+    try {
+      const response = await fetch("http://localhost:5000/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(product)
+      });
 
-  existingProducts.push(product);
+      const data = await response.json();
 
-  localStorage.setItem("products", JSON.stringify(existingProducts));
+      alert("Product added successfully!");
 
-  alert("Product Added Successfully!");
-};
+    } catch (error) {
+      console.error("Error adding product:", error);
+    }
+  };
 
   return (
     <div style={{ padding: "20px" }}>
       <h2>Add Product</h2>
 
       <form onSubmit={handleSubmit}>
-
-        <input
-          type="text"
-          name="name"
-          placeholder="Product Name"
-          onChange={handleChange}
-        />
+        <input type="text" name="name" placeholder="Product Name" onChange={handleChange} />
         <br /><br />
 
-        <input
-          type="number"
-          name="price"
-          placeholder="Price"
-          onChange={handleChange}
-        />
+        <input type="number" name="price" placeholder="Price" onChange={handleChange} />
         <br /><br />
 
-        <input
-          type="text"
-          name="category"
-          placeholder="Category"
-          onChange={handleChange}
-        />
+        <input type="text" name="category" placeholder="Category" onChange={handleChange} />
         <br /><br />
 
-        <textarea
-          name="description"
-          placeholder="Description"
-          onChange={handleChange}
-        />
+        <textarea name="description" placeholder="Description" onChange={handleChange}></textarea>
         <br /><br />
 
-        <input
-          type="number"
-          name="stock"
-          placeholder="Stock"
-          onChange={handleChange}
-        />
+        <input type="number" name="stock" placeholder="Stock" onChange={handleChange} />
         <br /><br />
 
         <button type="submit">Add Product</button>
-
       </form>
     </div>
   );
