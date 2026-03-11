@@ -1,35 +1,13 @@
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
+import products from "../data/products";
 
 function Home() {
 
-  const products = [
-    {
-      id: 1,
-      name: "Laptop",
-      price: 50000,
-      image: "https://m.media-amazon.com/images/I/71jG+e7roXL._SL1500_.jpg"
-    },
-    {
-      id: 2,
-      name: "Smartphone",
-      price: 20000,
-      image: "https://m.media-amazon.com/images/I/71yzJoE7WlL._SL1500_.jpg"
-    },
-    {
-      id: 3,
-      name: "Headphones",
-      price: 3000,
-      image: "https://m.media-amazon.com/images/I/61CGHv6kmWL._SL1500_.jpg"
-    },
-    {
-      id: 4,
-      name: "Smart Watch",
-      price: 7000,
-      image: "https://m.media-amazon.com/images/I/71LfnkRgZ4L._SL1500_.jpg"
-    }
-  ];
+  const { addToCart } = useContext(CartContext);
 
   const categories = [
     { name: "laptop", icon: "💻" },
@@ -43,7 +21,7 @@ function Home() {
 
       <Navbar />
 
-      {/* HERO SECTION WITH ELECTRONICS IMAGE */}
+      {/* HERO SECTION */}
       <div
         className="relative h-[450px] flex items-center justify-center text-center text-white bg-cover bg-center"
         style={{
@@ -51,7 +29,8 @@ function Home() {
             "url('https://images.unsplash.com/photo-1519389950473-47ba0277781c')"
         }}
       >
-        {/* dark overlay */}
+
+        {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/60"></div>
 
         <div className="relative z-10 max-w-xl">
@@ -71,7 +50,9 @@ function Home() {
           </Link>
 
         </div>
+
       </div>
+
 
       {/* CATEGORY SECTION */}
       <div className="bg-white shadow-sm py-10">
@@ -102,6 +83,7 @@ function Home() {
 
       </div>
 
+
       {/* FEATURED PRODUCTS */}
       <div className="max-w-7xl mx-auto py-12 px-6">
 
@@ -118,29 +100,36 @@ function Home() {
               className="bg-white shadow-lg rounded-xl p-5 text-center hover:shadow-2xl hover:scale-105 transition"
             >
 
-              <div className="h-48 flex items-center justify-center overflow-hidden">
-
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="max-h-full max-w-full object-contain"
-                />
-
-              </div>
-
+              {/* Product Image */}
+              <Link to={`/product/${product.id}`}>
+                <div className="h-48 flex items-center justify-center overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="max-h-full max-w-full object-contain"
+                 />
+                </div>
+              </Link>
+              {/* Product Name */}
               <h3 className="font-semibold text-lg mt-4">
                 {product.name}
               </h3>
 
+              {/* Price */}
               <p className="text-green-600 font-bold text-lg mt-2">
                 ₹{product.price}
               </p>
 
+              {/* Rating */}
               <div className="text-yellow-400 mt-2">
                 ⭐⭐⭐⭐☆
               </div>
 
-              <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800">
+              {/* Add to Cart */}
+              <button
+                onClick={() => addToCart(product)}
+                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800"
+              >
                 Add to Cart
               </button>
 

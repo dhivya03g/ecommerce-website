@@ -8,7 +8,7 @@ import "./App.css";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AddProduct from "./pages/admin/AddProduct";
 import ManageProduct from "./pages/admin/ManageProduct";
-
+import OrderHistory from "./pages/OrderHistory";
 /* =========================
    Customer Pages
 ========================= */
@@ -61,6 +61,9 @@ function App() {
 
         {/* Orders Page */}
         <Route path="/orders" element={<Orders />} />
+
+        {/* Order  history */}
+        <Route path="/orders" element={<OrderHistory />} />
 
 
         {/* =========================

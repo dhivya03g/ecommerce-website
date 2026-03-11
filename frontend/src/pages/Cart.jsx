@@ -1,56 +1,153 @@
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
 function Cart() {
 
-  const cartItems = [
-    { id: 1, name: "Laptop", price: 50000 },
-    { id: 2, name: "Headphones", price: 3000 }
-  ];
-
-  const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+  const {
+    cartItems,
+    removeFromCart,
+    increaseQuantity,
+    decreaseQuantity,
+    totalPrice
+  } = useContext(CartContext);
 
   return (
     <div className="min-h-screen bg-gray-100">
 
       <Navbar />
 
-      <div className="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-xl shadow-lg">
+      <div className="max-w-6xl mx-auto mt-10 bg-white p-8 rounded-xl shadow-lg">
 
-        <h1 className="text-3xl font-bold mb-6 text-center">
-          Your Cart
+        <h1 className="text-3xl font-bold mb-8 text-center">
+          🛒 Your Shopping Cart
         </h1>
 
-        <div className="space-y-4">
+        {/* EMPTY CART */}
+        {cartItems.length === 0 ? (
 
-          {cartItems.map((item) => (
-            <div
-              key={item.id}
-              className="flex justify-between items-center border-b pb-3"
-            >
-              <span className="text-lg">{item.name}</span>
-              <span className="font-semibold text-green-600">
-                ₹{item.price}
-              </span>
+          <div className="text-center py-10">
+
+            <p className="text-xl text-gray-600 mb-6">
+              Your cart is empty
+            </p>
+
+            <Link to="/products">
+
+              <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">
+                Continue Shopping
+              </button>
+
+            </Link>
+
+          </div>
+
+        ) : (
+
+          <>
+            {/* CART ITEMS */}
+            <div className="space-y-6">
+
+              {cartItems.map((item, index) => (
+
+                <div
+                  key={item.id || index}
+                  className="flex flex-col md:flex-row items-center justify-between border-b pb-5 gap-4"
+                >
+
+                  {/* PRODUCT IMAGE + INFO */}
+                  <div className="flex items-center gap-6 flex-1">
+
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-24 h-24 object-contain"
+                    />
+
+                    <div>
+
+                      <h3 className="text-lg font-semibold">
+                        {item.name}
+                      </h3>
+
+                      <p className="text-green-600 font-bold">
+                        ₹{item.price}
+                      </p>
+
+                    </div>
+
+                  </div>
+
+
+                  {/* QUANTITY CONTROLS */}
+                  <div className="flex items-center gap-3">
+
+                    <button
+                      onClick={() => decreaseQuantity(item.id)}
+                      className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300"
+                    >
+                      -
+                    </button>
+
+                    <span className="font-semibold">
+                      {item.quantity}
+                    </span>
+
+                    <button
+                      onClick={() => increaseQuantity(item.id)}
+                      className="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300"
+                    >
+                      +
+                    </button>
+
+                  </div>
+
+
+                  {/* SUBTOTAL */}
+                  <div className="font-semibold text-lg">
+
+                    ₹{item.price * item.quantity}
+
+                  </div>
+
+
+                  {/* REMOVE BUTTON */}
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className="text-red-500 font-semibold hover:text-red-700"
+                  >
+                    Remove
+                  </button>
+
+                </div>
+
+              ))}
+
             </div>
-          ))}
 
-        </div>
 
-        <div className="mt-6 text-right text-xl font-bold">
-          Total: ₹{total}
-        </div>
+            {/* TOTAL SECTION */}
+            <div className="mt-10 border-t pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
 
-        <div className="mt-6 text-center">
+              <h2 className="text-2xl font-bold">
+                Total: ₹{totalPrice}
+              </h2>
 
-          <Link to="/checkout">
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">
-              Proceed to Checkout
-            </button>
-          </Link>
+              <Link to="/checkout">
 
-        </div>
+                <button className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition">
+                  Proceed to Checkout
+                </button>
+
+              </Link>
+
+            </div>
+
+          </>
+
+        )}
 
       </div>
 
